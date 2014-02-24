@@ -21,8 +21,8 @@ test:
   # username: postgres
 
 production:
-  adapter: sqlite3
+  adapter: postpresql
   database: production
   pool: 5
   timeout: 5000
-  # username: postgres
+  username: postgres
