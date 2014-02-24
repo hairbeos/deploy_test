@@ -1,14 +1,14 @@
 # config valid only for Capistrano 3.1
 lock '3.1.0'
 
-set :application, 'deploy_test_app'
+set :application, 'test_app'
 set :repo_url, 'git://github.com/hairbeos/deploy_test.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, "/home/deploy/apps/#{application}"
+set :deploy_to, "/home/deploy/apps/test_app"
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -57,6 +57,6 @@ namespace :deploy do
 
 end
 
-set :user, 'deploy'
-set :scm_username, 'hairbeos'
+# set :user, 'deploy'
+# set :scm_username, 'hairbeos'
 set :use_sudo, false
