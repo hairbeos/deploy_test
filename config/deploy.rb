@@ -8,7 +8,7 @@ set :repo_url, 'git://github.com/hairbeos/deploy_test.git'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, "/home/deploy/apps/test_app"
+set :deploy_to, "/home/deploy/apps/#{fetch(:application)}_#{fetch(:stage)}"
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -57,6 +57,9 @@ namespace :deploy do
 
 end
 
-# set :user, 'deploy'
-# set :scm_username, 'hairbeos'
 set :use_sudo, false
+
+# set :stages, [:staging, :production]
+# set :default_stage, 'staging'
+# set :stage_dir, 'app/config/deploy'
+set :rails_env, 'production' 
