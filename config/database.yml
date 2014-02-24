@@ -21,7 +21,7 @@ test:
   # username: postgres
 
 production:
-  adapter: postpresql
+  adapter: postgresql
   database: production
   pool: 5
   timeout: 5000
