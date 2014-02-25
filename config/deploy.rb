@@ -17,13 +17,13 @@ set :deploy_to, "/home/deploy/apps/#{fetch(:application)}_#{fetch(:stage)}"
 # set :format, :pretty
 
 # Default value for :log_level is :debug
-set :log_level, :debug
+# set :log_level, :debug
 
 # Default value for :pty is false
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/database.yml}
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -54,7 +54,7 @@ namespace :deploy do
       # end
     end
   end
-
+  
 end
 
 set :use_sudo, false
