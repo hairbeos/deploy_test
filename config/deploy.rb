@@ -54,7 +54,19 @@ namespace :deploy do
       # end
     end
   end
-  
+
+  namespace :check do
+      task :linked_files => shared_path.join('config/database.yml')
+  end
+
+end
+
+remote_file shared_path.join('config/database.yml') => 'config/database.yml', roles: :app
+
+file 'config/database.yml' do |t|
+  on roles(:app) do |host|
+    upload! t.name, shared_path.join(t.name)
+  end
 end
 
 set :use_sudo, false

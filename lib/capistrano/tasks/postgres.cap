@@ -33,5 +33,14 @@ namespace :postgresql do
     end
   end
 
+  desc "Copy database.yml to server"
+  task :database_config do
+    on roles(:app) do
+    #   # scp config/database.yml user@my_server.com:/path_to_rails_app/shared/config/database.yml
+      execute "echo '-==== #{fetch(:shared_path)}'"
+    end
+  end
+
+  before 'deploy:check:linked_files', 'postgresql:database_config'
   before 'deploy:updated', 'postgresql:create_database'
 end
