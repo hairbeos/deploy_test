@@ -61,9 +61,9 @@ namespace :deploy do
 
 end
 
-remote_file shared_path.join('config/database.yml') => 'config/database.yml', roles: :app
+remote_file shared_path.join('config/database.yml') => 'config/database.yml', roles: :db
 
-set :use_sudo, false
+# set :use_sudo, true
 
 # set :stages, [:staging, :production]
 # set :default_stage, 'staging'

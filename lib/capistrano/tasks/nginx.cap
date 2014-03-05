@@ -1,0 +1,57 @@
+require 'capistrano'
+
+set :templates_path, "config/deploy/templates"
+
+set :nginx_server_name, -> { "localhost" }
+set :nginx_use_ssl, false
+set :nginx_ssl_certificate, -> { "#{fetch(:nginx_server_name)}.crt" }
+set :nginx_ssl_certificate_key, -> { "#{fetch(:nginx_server_name)}.key" }
+set :nginx_upload_local_certificate, -> { true }
+set :nginx_ssl_certificate_local_path, -> { "/etc/certificates/" }
+set :nginx_ssl_certificate_key_local_path, -> { "/etc/certificates/keys" }
+
+namespace :nginx do
+  desc "Setup nginx configuration for application"
+  task :config do
+    on roles(:app) do
+      template("nginx.conf.erb", "#{shared_path}/config/#{fetch(:application)}.conf")
+      # sudo do
+      # execute "#{sudo} mv #{shared_path}/config/#{fetch(:application)}.conf /etc/nginx/sites-available/#{fetch(:application)}.conf"
+      # end
+      # as :deploy do
+      # sudo do
+      execute "sudo ln -fs #{shared_path}/config/#{fetch(:application)}.conf /etc/nginx/sites-enabled/#{fetch(:application)}.conf"
+      # end
+
+      if fetch(:nginx_use_ssl)
+        if nginx_upload_local_certificate
+          put File.read(nginx_ssl_certificate_local_path), "/tmp/#{fetch(:nginx_ssl_certificate)}"
+          put File.read(nginx_ssl_certificate_key_local_path), "/tmp/#{fetch(:nginx_ssl_certificate_key)}"
+
+          execute "sudo mv /tmp/#{fetch(:nginx_ssl_certificate)} /etc/ssl/certs/#{fetch(:nginx_ssl_certificate)}"
+          execute "sudo mv /tmp/#{fetch(:nginx_ssl_certificate_key)} /etc/ssl/private/#{fetch(:nginx_ssl_certificate_key)}"
+        end
+
+        execute "sudo chown root:root /etc/ssl/certs/#{fetch(:nginx_ssl_certificate)}"
+        execute "sudo chown root:root /etc/ssl/private/#{fetch(:nginx_ssl_certificate_key)}"
+      end
+    end
+  end
+
+  desc "Reload nginx configuration"
+  task :reload do
+    on roles(:app) do
+      execute "mkdir -p #{shared_path}/log"
+      execute "sudo /etc/init.d/nginx reload"
+    end
+  end
+
+  after 'deploy:check', 'nginx:config'
+  after "deploy:finished", "nginx:reload"
+end
+
+
+def template(template_name, target)
+  config_file = "#{fetch(:templates_path)}/#{template_name}"
+  upload! StringIO.new(ERB.new(File.read(config_file)).result(binding)), target
+end
