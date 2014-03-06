@@ -65,9 +65,6 @@ remote_file shared_path.join('config/database.yml') => 'config/database.yml', ro
 
 # set :use_sudo, true
 
-# set :stages, [:staging, :production]
-# set :default_stage, 'staging'
-# set :stage_dir, 'app/config/deploy'
 set :rails_env, 'production' 
 set :rvm_type, :system
 set :rvm_roles, [:app, :web]

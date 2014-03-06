@@ -15,13 +15,7 @@ namespace :nginx do
   task :config do
     on roles(:app) do
       template("nginx.conf.erb", "#{shared_path}/config/#{fetch(:application)}.conf")
-      # sudo do
-      # execute "#{sudo} mv #{shared_path}/config/#{fetch(:application)}.conf /etc/nginx/sites-available/#{fetch(:application)}.conf"
-      # end
-      # as :deploy do
-      # sudo do
       execute "sudo ln -fs #{shared_path}/config/#{fetch(:application)}.conf /etc/nginx/sites-enabled/#{fetch(:application)}.conf"
-      # end
 
       if fetch(:nginx_use_ssl)
         if nginx_upload_local_certificate
