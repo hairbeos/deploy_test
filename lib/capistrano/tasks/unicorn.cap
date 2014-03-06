@@ -1,26 +1,27 @@
 require 'capistrano'
 
-set :unicorn_pid, -> { "#{shared_path}/config/unicorn/unicorn_#{fetch(:application)}.pid" }
-set :unicorn_config, -> { "#{shared_path}/config/unicorn/unicorn.rb" }
+set :unicorn_pid, -> { "#{shared_path}/config/unicorn_#{fetch(:application)}.pid" }
+set :unicorn_config, -> { "#{shared_path}/config/unicorn.rb" }
 set :unicorn_log, -> { "#{shared_path}/log/unicorn.log" }
 set :unicorn_user, -> { fetch(:user) }
 set :unicorn_workers, 4
 
 namespace :unicorn do
   desc "Setup Unicorn initializer and app configuration"
-  task :setup do
+  task :config do
     on roles(:app) do
-      execute "mkdir -p #{shared_path}/config/unicorn"
+      # execute "mkdir -p #{shared_path}/config/unicorn"
+      execute "mkdir -p #{shared_path}/log"
       # execute "mkdir -p #{shared_path}/tmp/pids"
       template "unicorn.rb.erb", fetch(:unicorn_config)
-      # template "unicorn_init.erb", "/tmp/unicorn_init"
-      # execute "chmod +x /tmp/unicorn_init"
-      # execute "sudo mv /tmp/unicorn_init /etc/init.d/unicorn_#{fetch(:application)}"
-      # execute "sudo update-rc.d -f unicorn_#{fetch(:application)} defaults"
+      template "unicorn_init.sh.erb", "/tmp/unicorn_init"
+      execute "chmod +x /tmp/unicorn_init"
+      execute "sudo mv /tmp/unicorn_init /etc/init.d/unicorn_#{fetch(:application)}"
+      execute "sudo update-rc.d -f unicorn_#{fetch(:application)} defaults"
     end
   end
 
-  after "deploy:check", "unicorn:setup"
+  after "deploy:check", "unicorn:config"
 end
 
 namespace :deploy do

@@ -20,7 +20,7 @@ set :deploy_to, "/home/deploy/apps/#{fetch(:application)}_#{fetch(:stage)}"
 # set :log_level, :debug
 
 # Default value for :pty is false
-# set :pty, true
+set :pty, true
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml}
@@ -61,7 +61,7 @@ namespace :deploy do
 
 end
 
-remote_file shared_path.join('config/database.yml') => 'config/database.yml', roles: :db
+remote_file shared_path.join('config/database.yml') => 'config/database.yml', roles: :app
 
 # set :use_sudo, true
 
@@ -69,3 +69,5 @@ remote_file shared_path.join('config/database.yml') => 'config/database.yml', ro
 # set :default_stage, 'staging'
 # set :stage_dir, 'app/config/deploy'
 set :rails_env, 'production' 
+set :rvm_type, :system
+set :rvm_roles, [:app, :web]

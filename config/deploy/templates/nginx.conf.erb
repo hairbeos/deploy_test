@@ -1,5 +1,5 @@
 upstream unicorn_<%= fetch(:application) %> {
-  server unix: <%= shared_path %>/unicorn/unicorn.<%= fetch(:application) %>.sock fail_timeout=0;
+  server unix:<%= shared_path %>/config/unicorn.<%= fetch(:application) %>.sock fail_timeout=0;
 }
 
 <% if fetch(:nginx_use_ssl) %>

@@ -3,7 +3,7 @@ pid "<%= fetch(:unicorn_pid) %>"
 stderr_path "<%= fetch(:unicorn_log) %>"
 stdout_path "<%= fetch(:unicorn_log) %>"
 
-listen "<%= shared_path %>/unicorn/unicorn.<%= fetch(:application) %>.sock"
+listen "<%= shared_path %>/config/unicorn.<%= fetch(:application) %>.sock"
 worker_processes <%= fetch(:unicorn_workers) %>
 timeout 30
 
